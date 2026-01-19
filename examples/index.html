@@ -34,9 +34,16 @@
     
     L.tileLayer('https://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 20
+      maxZoom: 20,
+      minZoom: 3
     }).addTo(map);
-    L.maidenhead({color : 'rgba(255, 0, 0, 0.4)'}).addTo(map);
+    L.maidenhead({
+      color : 'rgba(255, 0, 0, 0.4)', 
+      highlights: [
+            { grids: ["EM20", "EN"], color: 'rgba(0, 255, 0, 0.4)', fillOpacity: 0.4 },
+            { grids: ["EM66"], color: 'rgba(0, 0, 255, 0.4)', fillOpacity: 0.8 }
+      ]
+    }).addTo(map);
   </script>
 </body>
 

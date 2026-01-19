@@ -1,19 +1,31 @@
-/*
- * L.Maidenhead displays a Maidenhead Locator of lines on the map.
- */
-
 L.Maidenhead = L.LayerGroup.extend({
 
     options: {
         // Line and label color
         color: 'rgba(255, 0, 0, 0.4)',
         // Redraw on move or moveend
-        redraw: 'move'
+        redraw: 'move',
+        // Grids to highlight
+        highlights: []
     },
 
     initialize: function (options) {
         L.LayerGroup.prototype.initialize.call(this);
         L.Util.setOptions(this, options);
+
+        // Add highlight index by length for efficient lookup
+        this._highlightIndex = new Map();
+        for (const rule of this.options.highlights || []) {
+            for (const grid of rule.grids) {
+                const len = grid.length;
+
+                if (!this._highlightIndex.has(len)) {
+                    this._highlightIndex.set(len, new Map());
+                }
+
+                this._highlightIndex.get(len).set(grid, rule);
+            }
+        }
     },
 
     onAdd: function (map) {
@@ -66,6 +78,18 @@ L.Maidenhead = L.LayerGroup.extend({
 
                 var rectBounds = [[lat, lon], [lat + unit, lon + (unit * 2)]];
                 this.addLayer(L.rectangle(rectBounds, {color: this.options.color, weight: 1, fill: false, interactive: false}));
+                
+                var gridName = this._getLocator(lon, lat);
+                var highlight = this._getHighlight(gridName);
+                if (highlight) {
+                    this.addLayer(L.rectangle(rectBounds, {
+                        color: highlight.color || this.options.color,
+                        weight: 1,
+                        fillOpacity: highlight.fillOpacity || 0.4,
+                        fill: true,
+                        interactive: false
+                    }));
+                }
 
                 this.addLayer(
                     this._getLabel(
@@ -77,6 +101,20 @@ L.Maidenhead = L.LayerGroup.extend({
         }
 
         return this;
+    },
+
+    _getHighlight: function (gridName) {
+    // Check for highlight rule at hierarchical levels of grid names
+    let rule = this._highlightIndex.get(gridName.length)?.get(gridName);
+    if (rule) return rule;
+
+    // try shorter prefixes
+    for (let len = gridName.length - 1; len > 0; len--) {
+        rule = this._highlightIndex.get(len)?.get(gridName.slice(0, len));
+        if (rule) return rule;
+    }
+
+    return null;
     },
 
     _getLabel: function (lon, lat) {
