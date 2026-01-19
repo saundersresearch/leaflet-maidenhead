@@ -11,7 +11,7 @@
  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
-   <script src="../dist/leaflet-maidenhead.js"></script>
+   <script src="../src/index.js"></script>
   <style>
     body {
       padding: 0;
@@ -40,8 +40,8 @@
     L.maidenhead({
       color : 'rgba(255, 0, 0, 0.4)', 
       highlights: [
-            { grids: ["EM20", "EN"], color: 'rgba(0, 255, 0, 0.4)', fillOpacity: 0.4 },
-            { grids: ["EM66"], color: 'rgba(0, 0, 255, 0.4)', fillOpacity: 0.8 }
+            { grids: ["JN82", "JO"], color: 'rgba(0, 255, 0, 0.4)', fillOpacity: 0.4 },
+            { grids: ["KN16"], color: 'rgba(0, 0, 255, 0.4)', fillOpacity: 0.8 }
       ]
     }).addTo(map);
   </script>

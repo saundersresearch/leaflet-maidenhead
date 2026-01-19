@@ -1,3 +1,20 @@
+if (!document.getElementById('maidenhead-css')) {
+  const style = document.createElement('style');
+  style.id = 'maidenhead-css';
+  style.textContent = `
+    .maidenhead-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      font-weight: 900;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 L.Maidenhead = L.LayerGroup.extend({
 
     options: {
@@ -6,7 +23,9 @@ L.Maidenhead = L.LayerGroup.extend({
         // Redraw on move or moveend
         redraw: 'move',
         // Grids to highlight
-        highlights: []
+        highlights: [],
+        // Title sizes by zoom level
+        title_size: [0,10,12,16,20,26,12,16,24,36,10,14,20,36,60,12,20,36,7,12,24]
     },
 
     initialize: function (options) {
@@ -48,20 +67,16 @@ L.Maidenhead = L.LayerGroup.extend({
     redraw: function () {
 
         var d3 = new Array(20,10,10,10,10,10,1 ,1 ,1 ,1 ,1/24,1/24,1/24,1/24,1/24,1/240,1/240,1/240,1/240/24,1/240/24,1/240/24 );
-        var lat_cor = new Array(0 ,8 ,8 ,8 ,10,14,6 ,8 ,8 ,8 ,1.4 ,2.5 ,3 ,3.5 ,4 ,4 ,3.5 ,3.5 ,1.47 ,1.8 ,1.6 );
 
         var bounds = this._map.getBounds();
         var zoom = this._map.getZoom();
 
         var unit = d3[Math.round(zoom)];
-        var lcor = lat_cor[Math.round(zoom)];
 
         var w = bounds.getWest();
         var e = bounds.getEast();
         var n = bounds.getNorth();
         var s = bounds.getSouth();
-
-        var c = (zoom == 1) ? 2 : 0.1;
 
         if (n > 85) n = 85;
         if (s < -85) s = -85;
@@ -93,8 +108,8 @@ L.Maidenhead = L.LayerGroup.extend({
 
                 this.addLayer(
                     this._getLabel(
-                        lon + unit - (unit / lcor),
-                        lat + (unit / 2) + (unit / lcor * c)
+                        lon + unit,
+                        lat + (unit / 2),
                     )
                 );
             }
@@ -118,9 +133,8 @@ L.Maidenhead = L.LayerGroup.extend({
     },
 
     _getLabel: function (lon, lat) {
-
-        var title_size = new Array(0 ,10,12,16,20,26,12,16,24,36,12,14,20,36,60,12,20,36,8,12,24);
         var zoom = this._map.getZoom();
+        var title_size = this.options.title_size;
         var size = title_size[Math.round(zoom)] + 'px';
 
         var title = '<span style="cursor: default;"><font style="color:' +
@@ -128,8 +142,10 @@ L.Maidenhead = L.LayerGroup.extend({
             '; font-weight: 900; ">' + this._getLocator(lon, lat) + '</font></span>';
 
         var myIcon = L.divIcon({
-            className: 'my-div-icon',
-            html: title
+            className: 'maidenhead-label',
+            html: title,
+            iconSize: [0, 0],
+            iconAnchor: [0, 0]
         });
 
         var marker = L.marker([lat, lon], { icon: myIcon, clickable: false });
