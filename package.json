@@ -1,0 +1,18 @@
+{
+  "name": "leaflet-maidenhead",
+  "version": "0.2.0",
+  "description": "Leaflet maidenhead grid overlay with highlighting",
+  "main": "dist/maidenhead.min.js",
+  "files": [
+    "dist/",
+    "src/",
+    "examples/"
+  ],
+  "devDependencies": {
+    "esbuild": "^0.27.2",
+    "serve": "^14.2.5"
+  },
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --minify --sourcemap --outfile=dist/maidenhead.min.js"
+  }
+}
