@@ -1,18 +1,30 @@
 {
   "name": "leaflet-maidenhead",
   "version": "0.2.0",
-  "description": "Leaflet maidenhead grid overlay with highlighting",
-  "main": "dist/maidenhead.min.js",
-  "files": [
-    "dist/",
-    "src/",
-    "examples/"
+  "description": "Leaflet plugin for displaying and highlighting Maidenhead grid squares",
+  "keywords": [
+    "gis",
+    "map",
+    "radio"
   ],
-  "devDependencies": {
-    "esbuild": "^0.27.2",
-    "serve": "^14.2.5"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/saundersresearch/leaflet-maidenhead.git"
   },
+  "license": "MIT",
+  "author": "HA8TKS and Adam Saunders",
+  "type": "module",
+  "main": "index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "build": "esbuild src/index.js --bundle --minify --sourcemap --outfile=dist/maidenhead.min.js"
+    "build": "vite build",
+    "dev": "vite serve --open examples/index.html"
+  },
+  "devDependencies": {
+    "leaflet": "^1.9.4",
+    "vite": "^7.3.1"
   }
 }
