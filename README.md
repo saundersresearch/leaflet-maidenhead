@@ -29,7 +29,6 @@ See the example in `examples/` for a complete working demo.
 ### Options
 - **redraw**: Redraw the grid on `'move'` or `'moveend'`. Default is `'move'`.
 - **color**: The color of the lines and labels. Default is `rgba(255, 0, 0, 0.4)` 
-- **title_size**: An array defining the font sizes for labels at different zoom levels. Default is `[0,10,12,16,20,26,12,16,24,36,10,14,20,36,60,12,20,36,7,12,24]`.
 - **highlights**: An array of objects defining grid squares to highlight. Each object can have:
   - **grids**: An array of Maidenhead grid squares to highlight (e.g., `["JN82", "JO"]`). They will be highlighted at the largest level matching the prefix and all sub-levels.
   - **color**: The color for the highlighted squares.

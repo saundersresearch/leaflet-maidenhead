@@ -7,8 +7,6 @@ L.Maidenhead = L.LayerGroup.extend({
         redraw: 'move',
         // Grids to highlight
         highlights: [],
-        // Title sizes by zoom level
-        title_size: [0,10,12,16,20,26,12,16,24,36,10,14,20,36,60,12,20,36,7,12,24]
     },
 
     initialize: function (options) {
@@ -67,13 +65,11 @@ L.Maidenhead = L.LayerGroup.extend({
     },
 
     redraw: function () {
-
-        var d3 = new Array(20,10,10,10,10,10,1 ,1 ,1 ,1 ,1/24,1/24,1/24,1/24,1/24,1/240,1/240,1/240,1/240/24,1/240/24,1/240/24 );
-
         var bounds = this._map.getBounds();
         var zoom = this._map.getZoom();
 
-        var unit = d3[Math.round(zoom)];
+        var level = this._getLevelForZoom(zoom);
+        var unit = this._getUnitForLevel(level);
 
         var w = bounds.getWest();
         var e = bounds.getEast();
@@ -121,23 +117,83 @@ L.Maidenhead = L.LayerGroup.extend({
     },
 
     _getHighlight: function (gridName) {
-    // Check for highlight rule at hierarchical levels of grid names
-    let rule = this._highlightIndex.get(gridName.length)?.get(gridName);
-    if (rule) return rule;
-
-    // try shorter prefixes
-    for (let len = gridName.length - 1; len > 0; len--) {
-        rule = this._highlightIndex.get(len)?.get(gridName.slice(0, len));
+        // Check for highlight rule at hierarchical levels of grid names
+        let rule = this._highlightIndex.get(gridName.length)?.get(gridName);
         if (rule) return rule;
-    }
 
-    return null;
+        // try shorter prefixes
+        for (let len = gridName.length - 1; len > 0; len--) {
+            rule = this._highlightIndex.get(len)?.get(gridName.slice(0, len));
+            if (rule) return rule;
+        }
+
+        return null;
+    },
+
+    _getLevelForZoom: function (zoom) {
+        if (zoom <= 5)  return 0; // Field
+        if (zoom <= 9.5)  return 1; // Square
+        if (zoom <= 14) return 2; // Subsquare
+        if (zoom <= 18) return 3; // Extended
+        return 4;                // Extended+
+    },
+
+    _getUnitForLevel: function (level) {
+        return [
+            10,
+            1,
+            1 / 24,
+            1 / 240,
+            1 / 240 / 24
+        ][level];
+    },
+
+    _getCellPixelSize: function (unit) {
+        const p1 = this._map.latLngToContainerPoint([0, 0]);
+        const p2 = this._map.latLngToContainerPoint([0, unit * 2]);
+
+        return Math.abs(p2.x - p1.x);
+    },
+
+    _getFontSize: function (unit) {
+        // infer grid depth from unit size
+        var level = this._getLevelForZoom(this._map.getZoom());
+
+        // bounds per level
+        var bounds = {
+            0: { min: 28, max: 48 },
+            1: { min: 18, max: 28 },
+            2: { min: 12, max: 20 },
+            3: { min: 8, max: 12 },
+            4: { min: 8, max: 12 }
+        }[level];
+
+        var MIN = bounds.min;
+        var MAX = bounds.max;
+
+        // approximate pixel width of one grid cell
+        var cellPx = this._map.latLngToContainerPoint([0, unit * 2]).x -
+                    this._map.latLngToContainerPoint([0, 0]).x;
+
+        var target = cellPx * 0.2;
+
+        // first run
+        if (this._labelSize === null) {
+            this._labelSize = Math.max(MIN, Math.min(target, MAX));
+        }
+
+        // hysteresis: only update if out of bounds
+        if (target < MIN) this._labelSize = MIN;
+        if (target > MAX) this._labelSize = MAX;
+
+        return Math.round(this._labelSize);
     },
 
     _getLabel: function (lon, lat) {
         var zoom = this._map.getZoom();
-        var title_size = this.options.title_size;
-        var size = title_size[Math.round(zoom)] + 'px';
+        var level = this._getLevelForZoom(zoom);
+        var unit = this._getUnitForLevel(level);
+        var size = this._getFontSize(unit) + "px";
 
         var title = '<span style="cursor: default;"><font style="color:' +
             this.options.color + '; font-size:' + size +
@@ -160,13 +216,12 @@ L.Maidenhead = L.LayerGroup.extend({
         var ydiv_arr = new Array(10, 1, 1/24, 1/240, 1/240/24);
         var d1 = "ABCDEFGHIJKLMNOPQR".split("");
         var d2 = "ABCDEFGHIJKLMNOPQRSTUVWX".split("");
-        var d4 = new Array(0,1,1,1,1,1,2,2,2,2,3,3,3,3,3,4,4,4,5,5,5);
 
         var locator = "";
         var x = lon;
         var y = lat;
 
-        var precision = d4[Math.round(this._map.getZoom())];
+        var precision = this._getLevelForZoom(this._map.getZoom()) + 1;
 
         while (x < -180) { x += 360; }
         while (x > 180) { x -= 360; }
