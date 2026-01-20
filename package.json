@@ -1,6 +1,6 @@
 {
   "name": "@saundersresearch/leaflet-maidenhead",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Leaflet plugin for displaying and highlighting Maidenhead grid squares",
   "keywords": [
     "gis",
