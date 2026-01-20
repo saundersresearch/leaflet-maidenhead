@@ -1,20 +1,3 @@
-if (!document.getElementById('maidenhead-css')) {
-  const style = document.createElement('style');
-  style.id = 'maidenhead-css';
-  style.textContent = `
-    .maidenhead-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      font-weight: 900;
-    }
-  `;
-  document.head.appendChild(style);
-}
-
 L.Maidenhead = L.LayerGroup.extend({
 
     options: {
@@ -29,6 +12,25 @@ L.Maidenhead = L.LayerGroup.extend({
     },
 
     initialize: function (options) {
+        // Add styling
+        if (!document.getElementById('maidenhead-css')) {
+            const style = document.createElement('style');
+            style.id = 'maidenhead-css';
+            style.textContent = `
+                .leaflet-marker-icon .maidenhead-label,
+                .maidenhead-label {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                height: 100% !important;
+                text-align: center !important;
+                font-weight: 900 !important;
+                }
+            `;
+            document.head.appendChild(style);
+            }
+
         L.LayerGroup.prototype.initialize.call(this);
         L.Util.setOptions(this, options);
 
