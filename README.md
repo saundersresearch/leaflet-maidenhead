@@ -27,12 +27,26 @@ L.maidenhead({
 See the example in `examples/` for a complete working demo.
 
 ### Options
-- **redraw**: Redraw the grid on `'move'` or `'moveend'`. Default is `'move'`.
-- **color**: The color of the lines and labels. Default is `rgba(255, 0, 0, 0.4)` 
+- **redraw**: Redraw the grid on `'move'` or `'moveend'`. (default: `'move'`)
+- **color**: The color of the lines and labels. (default: `rgba(255, 0, 0, 0.4)`)
 - **highlights**: An array of objects defining grid squares to highlight. Each object can have:
   - **grids**: An array of Maidenhead grid squares to highlight (e.g., `["JN82", "JO"]`). They will be highlighted at the largest level matching the prefix and all sub-levels.
   - **color**: The color for the highlighted squares.
   - **fillOpacity**: The fill opacity for the highlighted squares.
+- **zoomLevels**: Configuration object to set zoom levels for different grid sizes:
+  - **field**: Zoom level for field grids (default: `5`)
+  - **square**: Zoom level for square grids (default: `9.5`)
+  - **subsquare**: Zoom level for subsquare grids (default: `14`)
+  - **extended**: Zoom level for extended grids (default: `18`)
+  - **extendedPlus**: Zoom level for extended plus grids (default: `22`)
+- **font**: Configuration object for font size:
+  - **cellPercentage**: Percentage of the grid cell size to use for font size (default: `0.2`)
+  - **sizeBounds**: Object defining min and max font sizes for each grid level:
+    - **field**: (default: `{ min: 28, max: 42 }`)
+    - **square**: (default: `{ min: 18, max: 28 }`)
+    - **subsquare**: (default: `{ min: 12, max: 20 }`)
+    - **extended**: (default: `{ min: 8, max: 12 }`)
+    - **extendedPlus**: (default: `{ min: 8, max: 12 }`)
 
 ## Installation for development
 

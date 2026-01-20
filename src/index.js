@@ -7,6 +7,25 @@ L.Maidenhead = L.LayerGroup.extend({
         redraw: 'move',
         // Grids to highlight
         highlights: [],
+        // Zoom levels to show labels for each grid level
+        zoomLevels: {
+            field: 5,
+            square: 9.5,
+            subsquare: 14,
+            extended: 18,
+            extendedPlus: 22
+        },
+        // Font size options
+        font: {
+            cellPercentage: 0.2,
+            sizeBounds: {
+                field: { min: 28, max: 42 },
+                square: { min: 18, max: 28 },
+                subsquare: { min: 12, max: 20 },
+                extended: { min: 8, max: 12 },
+                extendedPlus: { min: 8, max: 12 }
+            }
+        }
     },
 
     initialize: function (options) {
@@ -145,11 +164,13 @@ L.Maidenhead = L.LayerGroup.extend({
 
 
     _getLevelForZoom: function (zoom) {
-        if (zoom <= 5)  return 0; // Field
-        if (zoom <= 9.5)  return 1; // Square
-        if (zoom <= 14) return 2; // Subsquare
-        if (zoom <= 18) return 3; // Extended
-        return 4;                // Extended+
+        const z = this.options.zoomLevels;
+
+        if (zoom <= z.field) return 0;
+        if (zoom <= z.square) return 1;
+        if (zoom <= z.subsquare) return 2;
+        if (zoom <= z.extended) return 3;
+        return 4;
     },
 
     _getUnitForLevel: function (level) {
@@ -174,13 +195,9 @@ L.Maidenhead = L.LayerGroup.extend({
         var level = this._getLevelForZoom(this._map.getZoom());
 
         // bounds per level
-        var bounds = {
-            0: { min: 28, max: 42 },    
-            1: { min: 18, max: 28 },
-            2: { min: 12, max: 20 },
-            3: { min: 8, max: 12 },
-            4: { min: 8, max: 12 }
-        }[level];
+        var bounds = this.options.font.sizeBounds[
+            ['field', 'square', 'subsquare', 'extended', 'extendedPlus'][level]
+        ];
 
         var MIN = bounds.min;
         var MAX = bounds.max;
@@ -189,7 +206,7 @@ L.Maidenhead = L.LayerGroup.extend({
         var cellPx = this._map.latLngToContainerPoint([0, unit * 2]).x -
                     this._map.latLngToContainerPoint([0, 0]).x;
 
-        var target = cellPx * 0.2;
+        var target = cellPx * this.options.font.cellPercentage;
 
         // first run
         if (this._labelSize === null) {
