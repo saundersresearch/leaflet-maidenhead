@@ -9,7 +9,7 @@ This project is a fork of [Leaflet.Maidenhead](https://ha8tks.github.io/Leaflet.
 Include the script:
 
 ```html
-<script src="https://unpkg.com/@saundersresearch/leaflet-maidenhead@latest/leaflet-maidenhead.js" />
+<script src="https://unpkg.com/@saundersresearch/leaflet-maidenhead@latest/dist/leaflet-maidenhead.js" />
 ```
 
 Then add the Maidenhead layer to your Leaflet map:
