@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added 
 - Added CHANGELOG.md
+- Added option to highlight specific grid squares
+- Added font size configuration option
 
 ### Changed
 - Refactored project structure using vite
+- Centered labels in grid squares
+- Updated README.md with usage and installation instructions

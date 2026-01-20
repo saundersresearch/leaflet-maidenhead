@@ -1,5 +1,5 @@
 {
-  "name": "leaflet-maidenhead",
+  "name": "@saundersresearch/leaflet-maidenhead",
   "version": "0.2.0",
   "description": "Leaflet plugin for displaying and highlighting Maidenhead grid squares",
   "keywords": [
@@ -9,19 +9,17 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/saundersresearch/leaflet-maidenhead.git"
+    "url": "git+https://github.com/saundersresearch/leaflet-maidenhead.git"
   },
   "license": "MIT",
   "author": "HA8TKS and Adam Saunders",
   "type": "module",
-  "main": "index.js",
-  "files": [
-    "dist",
-    "src"
-  ],
+  "main": "dist/leaflet-maidenhead.js",
+  "files": ["dist"],
   "scripts": {
     "build": "vite build",
-    "dev": "vite serve --open examples/index.html"
+    "dev": "vite serve --open examples/index.html",
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "leaflet": "^1.9.4",

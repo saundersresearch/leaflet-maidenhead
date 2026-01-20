@@ -1,7 +1,7 @@
 MIT License
 
 Copyright (c) 2019 ha8tks (https://github.com/ha8tks/Leaflet.Maidenhead)
-Copyright (c) 2026 Adam Saunders (modifications)
+Copyright (c) 2026 Adam Saunders (modifications, see https://github.com/saundersresearch/leaflet-maidenhead/blob/main/CHANGELOG.md)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

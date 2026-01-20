@@ -1,19 +1,50 @@
-# Leaflet.Maidenhead
-### What is this?
-Draw a [Maidenhead Locator System](https://en.wikipedia.org/wiki/Maidenhead_Locator_System) lines and labels.
->*"The Maidenhead Locator System (a.k.a. QTH Locator and IARU Locator) is a geographic co-ordinate system used by amateur radio operators to succinctly describe their locations"*
-### Demo anyone?
-[Have a look](https://ha8tks.github.io/Leaflet.Maidenhead/examples/)
-### Usage example
-Include the maidenhead javasript file:
-```bash
-<script src="https://ha8tks.github.io/Leaflet.Maidenhead/src/L.Maidenhead.js"></script>
+# leaflet-maidenhead
+
+> A Leaflet plugin for displaying and highlighting Maidenhead grid squares
+
+This project is a fork of [Leaflet.Maidenhead](https://ha8tks.github.io/Leaflet.Maidenhead/) by HA8TKS that adds the ability to highlight specific grid squares.
+
+## Usage
+
+Include the script:
+
+```html
+<script src="https://unpkg.com/@saundersresearch/leaflet-maidenhead@latest/leaflet-maidenhead.js" />
 ```
-After instantiating the map:
-```bash
+
+Then add the Maidenhead layer to your Leaflet map:
+
+```javascript
 L.maidenhead({
-	color : 'rgba(255, 0, 0, 0.4)'
+    color : 'rgba(255, 0, 0, 0.4)', 
+    highlights: [
+        { grids: ["JN82", "JO"], color: 'rgba(0, 255, 0, 0.4)', fillOpacity: 0.4 },
+        { grids: ["KN16"], color: 'rgba(0, 0, 255, 0.4)', fillOpacity: 0.8 }
+    ]
 }).addTo(map);
 ```
+
+See the example in `examples/` for a complete working demo.
+
 ### Options
-- **color**: The color of the lines and labels. Default `rgba(255, 0, 0, 0.4)` 
+- **redraw**: Redraw the grid on `'move'` or `'moveend'`. Default is `'move'`.
+- **color**: The color of the lines and labels. Default is `rgba(255, 0, 0, 0.4)` 
+- **title_size**: An array defining the font sizes for labels at different zoom levels. Default is `[0,10,12,16,20,26,12,16,24,36,10,14,20,36,60,12,20,36,7,12,24]`.
+- **highlights**: An array of objects defining grid squares to highlight. Each object can have:
+  - **grids**: An array of Maidenhead grid squares to highlight (e.g., `["JN82", "JO"]`). They will be highlighted at the largest level matching the prefix and all sub-levels.
+  - **color**: The color for the highlighted squares.
+  - **fillOpacity**: The fill opacity for the highlighted squares.
+
+## Installation for development
+
+For local development, clone the repository and install the dependencies with `npm install`. Then, build and run the example in `examples/` with `npm run dev`.
+
+To build for production, use `npm run build`. The output will be at `dist/leaflet-maidenhead.js`.
+
+## License
+
+This project is released under the [MIT license](https://github.com/saundersresearch/leaflet-maidenhead/blob/main/LICENSE).
+
+## See also
+- [Leaflet.Maidenhead by HA8TKS](https://ha8tks.github.io/Leaflet.Maidenhead/) is the original project this is forked from.
+- [Leaflet.Maidenhead by IvanSanchez](https://gitlab.com/IvanSanchez/leaflet.maidenhead) is an official Leaflet plugin for Maidenhead grids.
