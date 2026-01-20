@@ -117,18 +117,32 @@ L.Maidenhead = L.LayerGroup.extend({
     },
 
     _getHighlight: function (gridName) {
-        // Check for highlight rule at hierarchical levels of grid names
-        let rule = this._highlightIndex.get(gridName.length)?.get(gridName);
-        if (rule) return rule;
+        const zoom = this._map.getZoom();
+        const level = this._getLevelForZoom(zoom);
 
-        // try shorter prefixes
-        for (let len = gridName.length - 1; len > 0; len--) {
-            rule = this._highlightIndex.get(len)?.get(gridName.slice(0, len));
-            if (rule) return rule;
+        // locator length for the currently drawn grid
+        const levelLengths = [2, 4, 6, 8, 10];
+        const targetLen = levelLengths[level] || gridName.length;
+
+        // normalize drawn grid to current level
+        const drawn = gridName.slice(0, targetLen);
+
+        // draw if any children or parent are highlighted
+        for (const rules of this._highlightIndex.values()) {
+            for (const [highlightGrid, rule] of rules.entries()) {
+                const len = Math.min(highlightGrid.length, targetLen);
+
+                if (
+                    drawn.slice(0, len) === highlightGrid.slice(0, len)
+                ) {
+                    return rule;
+                }
+            }
         }
 
         return null;
     },
+
 
     _getLevelForZoom: function (zoom) {
         if (zoom <= 5)  return 0; // Field
@@ -161,7 +175,7 @@ L.Maidenhead = L.LayerGroup.extend({
 
         // bounds per level
         var bounds = {
-            0: { min: 28, max: 48 },
+            0: { min: 28, max: 42 },    
             1: { min: 18, max: 28 },
             2: { min: 12, max: 20 },
             3: { min: 8, max: 12 },

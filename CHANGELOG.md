@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Changed grid highlighting logic to highlight a grid if either its parent or any of its children are to be highlighted
+
 ### Removed
 - Removed title_size option for font size configuration and replaced with calculation based on zoom level
 
